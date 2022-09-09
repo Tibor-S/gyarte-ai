@@ -1,4 +1,3 @@
-import logging
 from game import Game
 from ai import pittsNetwork
 import numpy as np
