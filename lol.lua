@@ -8,12 +8,6 @@ function getPositions()
 		
 		screenX = marioX-layer1x
 		screenY = marioY-layer1y
-	-- elseif gameinfo.getromname() == "Super Mario Bros." then
-	-- 	marioX = memory.readbyte(0x6D) * 0x100 + memory.readbyte(0x86)
-	-- 	marioY = memory.readbyte(0x03B8)+16
-	
-	-- 	screenX = memory.readbyte(0x03AD)
-	-- 	screenY = memory.readbyte(0x03B8)
 	end
 end
 
@@ -23,24 +17,6 @@ function getTile(dx, dy)
 		y = math.floor((marioY+dy)/16)
 		
 		return memory.readbyte(0x1C800 + math.floor(x/0x10)*0x1B0 + y*0x10 + x%0x10)
-	-- elseif gameinfo.getromname() == "Super Mario Bros." then
-	-- 	local x = marioX + dx + 8
-	-- 	local y = marioY + dy - 16
-	-- 	local page = math.floor(x/256)%2
-
-	-- 	local subx = math.floor((x%256)/16)
-	-- 	local suby = math.floor((y - 32)/16)
-	-- 	local addr = 0x500 + page*13*16+suby*16+subx
-		
-	-- 	if suby >= 13 or suby < 0 then
-	-- 		return 0
-	-- 	end
-		
-	-- 	if memory.readbyte(addr) ~= 0 then
-	-- 		return 1
-	-- 	else
-	-- 		return 0
-	-- 	end
 	end
 end
 
