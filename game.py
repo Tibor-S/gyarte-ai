@@ -5,6 +5,7 @@ import os
 from random import random
 from time import sleep
 import keyboard
+print(__name__)
 
 
 class Game():
