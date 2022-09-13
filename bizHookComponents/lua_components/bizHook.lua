@@ -1,13 +1,71 @@
+--- CONSTANTS
+
 local BoxRadius = 6
 local InputSize = (BoxRadius * 2 + 1) * (BoxRadius * 2 + 1)
-
+local CHOST, CPORT = "localhost", 9999
 local Inputs = InputSize + 1
-
 local memory = memory
 local console = console
 local gui = gui
 local event = event
 local emu = emu
+
+--- SET UP PACKETS AND SOCKET
+
+local version = _VERSION:match("%d+%.%d+")
+package.path = 'lua_modules/share/lua/'
+    .. version
+    .. '/?.lua;lua_modules/share/lua/'
+    .. version
+    .. '/?/init.lua;'
+    .. package.path
+
+package.cpath = 'lua_modules/lib/lua/'
+    .. version
+    .. '/?.so;'
+    .. package.cpath
+
+--- FUNCTIONS
+
+local function connectSocket()
+  local socket = require('socket')
+  tcp = assert(socket.tcp())
+  tcp:settimeout(0.01)
+  -- console.log(tcp)
+  tcp:connect(CHOST, CPORT)
+  -- console.log('SOCKET CONNECTED TO: ' .. tcp:getsockname())
+end
+
+local function disconnectSocket()
+  tcp:close()
+end
+
+local function sendBitmap(tbl)
+  local s = ''
+  for i = 1, #tbl do
+    s = s .. tostring(tbl[i])
+  end
+  -- console.log('SENDING:')
+  -- console.log(s)
+  tcp:send(s)
+end
+
+local function recvActions()
+  -- console.log('RECEIVING:')
+  local s, status, partial = tcp:receive('*l')
+  -- console.log('DATA: ' .. tostring(s))
+  -- console.log('STATUS: ' .. tostring(status))
+  -- console.log('PARTIAL: ' .. tostring(partial))
+  local tbl = {}
+  tbl['u'] = tonumber(partial[1])
+  tbl['r'] = tonumber(partial[2])
+  tbl['d'] = tonumber(partial[3])
+  tbl['l'] = tonumber(partial[4])
+  tbl['a'] = tonumber(partial[5])
+  tbl['b'] = tonumber(partial[6])
+  tbl['x'] = tonumber(partial[7])
+  return tbl
+end
 
 local function getPositions()
   marioX = memory.read_s16_le(0x94)
@@ -68,7 +126,7 @@ local function getInputs()
         local distx = math.abs(sprites[i]["x"] - (marioX + dx))
         local disty = math.abs(sprites[i]["y"] - (marioY + dy))
         if distx <= 8 and disty <= 8 then
-          inputs[#inputs] = -1
+          inputs[#inputs] = 2
         end
       end
 
@@ -76,7 +134,7 @@ local function getInputs()
         local distx = math.abs(extended[i]["x"] - (marioX + dx))
         local disty = math.abs(extended[i]["y"] - (marioY + dy))
         if distx < 8 and disty < 8 then
-          inputs[#inputs] = -1
+          inputs[#inputs] = 2
         end
       end
     end
@@ -98,6 +156,12 @@ local function loop()
     s = s .. '\n'
   end
   gui.text(50, 50, s)
+  -- console.log(tostring(inps))
+  connectSocket()
+  sendBitmap(inps)
+  recvActions()
+  disconnectSocket()
+
 end
 
 string.lpad = function(str, len, char)

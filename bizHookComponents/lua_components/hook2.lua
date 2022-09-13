@@ -17,7 +17,7 @@ package.cpath = 'lua_modules/lib/lua/'
 -- console.log('requiring')
 
 -- local HOST, PORT = "DESKTOP-DL0JINT", 4321
-local CHOST, CPORT = "localhost", 1234
+local CHOST, CPORT = "localhost", 9999
 -- local socket = require("socket")
 
 -- -- Create the client and initial connection
