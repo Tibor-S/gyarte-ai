@@ -1,3 +1,0 @@
-#!/bin/sh
-unset LUA_PATH LUA_PATH_5_2 LUA_PATH_5_3 LUA_PATH_5_4 LUA_CPATH LUA_CPATH_5_2 LUA_CPATH_5_3 LUA_CPATH_5_4
-LUAROCKS_SYSCONFDIR="/usr/local/etc/luarocks" LUA_PATH="/mnt/c/Users/Sebastian/Documents/Projects/ai-test/luarocks-3.9.1/src/?.lua;;" exec "/usr/local/bin/lua" "/mnt/c/Users/Sebastian/Documents/Projects/ai-test/luarocks-3.9.1/src/bin/luarocks-admin" --project-tree="/mnt/c/Users/Sebastian/Documents/Projects/ai-test/luarocks-3.9.1/lua_modules" "$@"
