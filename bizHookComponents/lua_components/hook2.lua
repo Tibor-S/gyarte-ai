@@ -2,7 +2,7 @@
 
 console.log('start')
 local version = _VERSION:match("%d+%.%d+")
-print(version)
+console.log(version)
 package.path = 'lua_modules/share/lua/'
     .. version
     .. '/?.lua;lua_modules/share/lua/'
@@ -17,7 +17,7 @@ package.cpath = 'lua_modules/lib/lua/'
 -- console.log('requiring')
 
 -- local HOST, PORT = "DESKTOP-DL0JINT", 4321
-local CHOST, CPORT = "DESKTOP-DL0JINT", 1234
+local CHOST, CPORT = "localhost", 1234
 -- local socket = require("socket")
 
 -- -- Create the client and initial connection
