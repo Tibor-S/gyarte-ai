@@ -1,5 +1,4 @@
 import socket
-from time import sleep
 
 if __name__ == '__main__':
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -11,8 +10,5 @@ if __name__ == '__main__':
     print('accepted')
     res = clientS.recv(256)
     print('RECEIVED:', res)
-    bs = bytearray()
-    bs.append(0)
     clientS.send(b"sent")
     print('sent', b"sent")
-    sleep(1)
