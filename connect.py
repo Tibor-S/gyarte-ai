@@ -10,6 +10,6 @@ if __name__ == '__main__':
         clientS, address = s.accept()
         # print('accepted')
         res = clientS.recv(256)
-        print('RECEIVED:', len(res.decode('utf-8')))
+        # print('RECEIVED:', len(res.decode('utf-8')))
         clientS.send(b"0101010")
         # print('sent', b"0101010")

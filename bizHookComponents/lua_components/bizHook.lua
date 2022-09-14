@@ -24,11 +24,11 @@ package.cpath = 'lua_modules/lib/lua/'
     .. version
     .. '/?.so;'
     .. package.cpath
+local socket = require('socket')
 
 --- FUNCTIONS
 
 local function connectSocket()
-  local socket = require('socket')
   tcp = assert(socket.tcp())
   tcp:settimeout(0.01)
   -- console.log(tcp)
