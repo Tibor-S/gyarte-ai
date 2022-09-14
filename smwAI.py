@@ -20,19 +20,27 @@ class BizNetwork(pittsNetwork):
     def action(self):
         self.con.awaitConnection()
         bs = self.con.recv().decode('utf-8')
-        print(bs[0])
+        print(bs)
+        # print(bs[0])
         bitmap = np.reshape([int(b) for b in bs], (len(bs), 1))
-        print(bitmap)
-        # output = ''.join([str(o) for o in np.array(self.interact(bitmap).T)])
-        output = b'0100101010'
-        self.con.send(b"0100300202010021010")
+        # print(bitmap)
+        ### input = 169
+        out = self.interact(bitmap).T
+        ### out = 7
+        # print(out)
+        output = ''.join(
+            [str(int(o)) for o in np.array(out)[0]]
+        ).encode('utf-8')
+        # print(output)
+        # output = '0100101010'.encode('utf-8')
+        self.con.send(output)
 
 
 if __name__ == '__main__':
     network = BizNetwork(
         0.1,
-        [0],
-        [0],
+        [[1 for _ in range(7)]],  # 7
+        [np.matrix(np.ones((7, 169)))],  # 7 x 169
     )
 
     print(
@@ -41,4 +49,3 @@ if __name__ == '__main__':
     )
     while True:
         network.action()
-        break

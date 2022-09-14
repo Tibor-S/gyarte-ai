@@ -51,11 +51,11 @@ local function sendBitmap(tbl)
 end
 
 local function recvActions()
-  console.log('RECEIVING:')
+  -- console.log('RECEIVING:')
   local s, status, partial = tcp:receive(1024)
-  console.log('DATA: ' .. tostring(s))
-  console.log('STATUS: ' .. tostring(status))
-  console.log('PARTIAL: ' .. partial)
+  -- console.log('DATA: ' .. tostring(s))
+  -- console.log('STATUS: ' .. tostring(status))
+  -- console.log('PARTIAL: ' .. partial)
   local tbl = {}
   tbl['u'] = tonumber(partial[1])
   tbl['r'] = tonumber(partial[2])
@@ -144,18 +144,18 @@ end
 
 local function loop()
   local inps = getInputs()
-  local s = '' .. tostring(marioX) .. ', ' .. tostring(marioY) .. '\n'
-  for y = 0, 12 do
-    for x = 1, 13 do
-      -- console.log('lol')
-      -- console.log(13 * y + x)
-      -- console.log(inps[13 * y + x])
+  -- local s = '' .. tostring(marioX) .. ', ' .. tostring(marioY) .. '\n'
+  -- for y = 0, 12 do
+  --   for x = 1, 13 do
+  --     -- console.log('lol')
+  --     -- console.log(13 * y + x)
+  --     -- console.log(inps[13 * y + x])
 
-      s = s .. string.lpad(tostring(inps[13 * y + x]), 2) .. '|'
-    end
-    s = s .. '\n'
-  end
-  gui.text(50, 50, s)
+  --     s = s .. string.lpad(tostring(inps[13 * y + x]), 2) .. '|'
+  --   end
+  --   s = s .. '\n'
+  -- end
+  -- gui.text(50, 50, s)
   -- console.log(tostring(inps))
   connectSocket()
   sendBitmap(inps)
