@@ -51,11 +51,11 @@ local function sendBitmap(tbl)
 end
 
 local function recvActions()
-  -- console.log('RECEIVING:')
-  local s, status, partial = tcp:receive('*l')
-  -- console.log('DATA: ' .. tostring(s))
-  -- console.log('STATUS: ' .. tostring(status))
-  -- console.log('PARTIAL: ' .. tostring(partial))
+  console.log('RECEIVING:')
+  local s, status, partial = tcp:receive(1024)
+  console.log('DATA: ' .. tostring(s))
+  console.log('STATUS: ' .. tostring(status))
+  console.log('PARTIAL: ' .. partial)
   local tbl = {}
   tbl['u'] = tonumber(partial[1])
   tbl['r'] = tonumber(partial[2])
