@@ -9,6 +9,7 @@ local console = console
 local gui = gui
 local event = event
 local emu = emu
+local joypad = joypad
 
 --- SET UP PACKETS AND SOCKET
 
@@ -55,16 +56,37 @@ local function recvActions()
   local s, status, partial = tcp:receive(1024)
   -- console.log('DATA: ' .. tostring(s))
   -- console.log('STATUS: ' .. tostring(status))
-  -- console.log('PARTIAL: ' .. partial)
+  -- console.log('PARTIAL: ')
+  -- console.log(string.sub(partial, 1, 1))
   local tbl = {}
-  tbl['u'] = tonumber(partial[1])
-  tbl['r'] = tonumber(partial[2])
-  tbl['d'] = tonumber(partial[3])
-  tbl['l'] = tonumber(partial[4])
-  tbl['a'] = tonumber(partial[5])
-  tbl['b'] = tonumber(partial[6])
-  tbl['x'] = tonumber(partial[7])
+  tbl['Up'] = tonumber(string.sub(partial, 1, 1))
+  tbl['Right'] = tonumber(string.sub(partial, 2, 2))
+  tbl['Down'] = tonumber(string.sub(partial, 3, 3))
+  tbl['Left'] = tonumber(string.sub(partial, 4, 4))
+  tbl['A'] = tonumber(string.sub(partial, 5, 5))
+  tbl['B'] = tonumber(string.sub(partial, 6, 6))
+  tbl['X'] = tonumber(string.sub(partial, 7, 7))
+  -- console.log('TABLE:')
+  -- console.log(tbl['Up'])
   return tbl
+end
+
+local function setControls(tbl)
+  joypad.set({
+    Up = tbl['Up'],
+    Right = tbl['Right'],
+    Down = tbl['Down'],
+    Left = tbl['Left'],
+    A = tbl['A'],
+    B = tbl['B'],
+    X = tbl['X']
+  }, 1)
+  -- joypad.set({ Right = 1 }, tbl['Right'])
+  -- joypad.set({ Down = 1 }, tbl['Down'])
+  -- joypad.set({ Left = 1 }, tbl['Left'])
+  -- joypad.set({ X = 1 }, tbl['X'])
+  -- joypad.set({ A = 1 }, tbl['A'])
+  -- joypad.set({ B = 1 }, 1)
 end
 
 local function getPositions()
@@ -159,7 +181,8 @@ local function loop()
   -- console.log(tostring(inps))
   connectSocket()
   sendBitmap(inps)
-  recvActions()
+  local tbl = recvActions()
+  setControls(tbl)
   disconnectSocket()
 
 end

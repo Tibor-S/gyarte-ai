@@ -3,6 +3,14 @@ import numpy as np
 from connect import Connect
 
 
+def format(n: int):
+    if n == 2:
+        return -1
+    elif n == -1:
+        return 2
+    return n
+
+
 class BizNetwork(pittsNetwork):
 
     def __init__(
@@ -22,7 +30,7 @@ class BizNetwork(pittsNetwork):
         bs = self.con.recv().decode('utf-8')
         print(bs)
         # print(bs[0])
-        bitmap = np.reshape([int(b) for b in bs], (len(bs), 1))
+        bitmap = np.reshape([format(int(b)) for b in bs], (len(bs), 1))
         # print(bitmap)
         ### input = 169
         out = self.interact(bitmap).T
@@ -39,8 +47,14 @@ class BizNetwork(pittsNetwork):
 if __name__ == '__main__':
     network = BizNetwork(
         0.1,
-        [[1 for _ in range(7)]],  # 7
-        [np.matrix(np.ones((7, 169)))],  # 7 x 169
+        [
+            [1 for _ in range(169)],
+            [1 for _ in range(7)],
+        ],  # 7
+        [
+            np.matrix(np.random.rand(169, 169))-.5,
+            np.matrix(np.random.rand(7, 169))-.5,
+        ],  # 7 x 169
     )
 
     print(
