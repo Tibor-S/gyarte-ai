@@ -10,7 +10,7 @@ def format(n: int):
     if n == 2:
         return -1
     elif n == -1:
-        return 2
+        return 0
     return n
 
 
@@ -44,29 +44,27 @@ class BizNetwork(pittsNetwork):
         )
         out = self.interact(bitmap).T
         output = ''.join(
-            [str(int(o)) for o in np.array(out)[0]]
-        ).encode('utf-8')
+            [str(format(int(o))) for o in np.array(out)[0]]
+        )
 
         # CHECK IF STUCK
         if self.comparePos != (xpos, ypos):
             self.comparePos = (xpos, ypos)
             self.timeoutCheck = time()
-            print('not stuck')
-        elif time() - self.timeoutCheck >= 2:
+        elif time() - self.timeoutCheck >= 5:
             status = 0
-            print('stuck -> dead')
-        else:
-            print('stuck')
 
+        output += str(status)
+        print(output)
         # Send Actions
-        if status == 1:
-            self.con.send(output)
-        else:
-            if floor(time()) % 2 == 0:
-                b = '0000100'.encode('utf-8')
-            else:
-                b = '0000000'.encode('utf-8')
-            self.con.send(b)  # skickar endast A
+        # if status == 1:
+        self.con.send(output.encode('utf-8'))
+        # else:
+        #     if floor(time()) % 10 == 0:
+        #         b = '0000100'.encode('utf-8')
+        #     else:
+        #         b = '0000000'.encode('utf-8')
+        #     self.con.send(b)  # skickar endast A
         return status
 
 
@@ -92,23 +90,24 @@ class Generation:
             alive = 1
             while alive == 1:
                 alive = species.action()
-            print('waiting...')
-            while alive == 0:
-                alive = species.action()
+            # print('waiting...')
+            # while alive == 0:
+            #     alive = species.action()
             print('Next Species')
 
 
 if __name__ == '__main__':
-    network = BizNetwork(
-        0.1,
-        [
-            [1 for _ in range(169)],
-            [1 for _ in range(7)],
-        ],  # 7
-        [
-            np.matrix(np.random.rand(169, 169))-.5,
-            np.matrix(np.random.rand(7, 169))-.5,
-        ],  # 7 x 169
-    )
-    gen = Generation([network])
-    gen.testGen()
+    while True:
+        networks = [BizNetwork(
+            0.1,
+            [
+                [1 for _ in range(169)],
+                [1 for _ in range(7)],
+            ],  # 7
+            [
+                np.matrix(np.random.rand(169, 169))-0.5,
+                np.matrix(np.random.rand(7, 169))-0.5
+            ],  # 7 x 169
+        )for _ in range(50)]
+        gen = Generation(networks, populationMult=1)
+        gen.testGen()

@@ -4,12 +4,19 @@ local BoxRadius = 6
 local InputSize = (BoxRadius * 2 + 1) * (BoxRadius * 2 + 1)
 local CHOST, CPORT = "localhost", 9999
 local Inputs = InputSize + 1
+local RootPath = "../"
+local currentState = 'base'
+
+--- BIZHAWK FUNCTIONS
+
 local memory = memory
 local console = console
 local gui = gui
 local event = event
 local emu = emu
 local joypad = joypad
+local savestate = savestate
+
 
 --- SET UP PACKETS AND SOCKET
 
@@ -35,6 +42,10 @@ local function status()
     return false
   end
   return true
+end
+
+local function loadState(name)
+  savestate.load(RootPath .. "/savestates/" .. name .. ".State")
 end
 
 local function connectSocket()
@@ -74,7 +85,7 @@ local function recvActions()
   -- console.log('DATA: ' .. tostring(s))
   -- console.log('STATUS: ' .. tostring(status))
   -- console.log('PARTIAL: ')
-  -- console.log(string.sub(partial, 1, 1))
+  -- console.log(partial)
   local tbl = {}
   tbl['Up'] = tonumber(string.sub(partial, 1, 1))
   tbl['Right'] = tonumber(string.sub(partial, 2, 2))
@@ -83,6 +94,10 @@ local function recvActions()
   tbl['A'] = tonumber(string.sub(partial, 5, 5))
   tbl['B'] = tonumber(string.sub(partial, 6, 6))
   tbl['X'] = tonumber(string.sub(partial, 7, 7))
+  --RESET IF LAST BYTE IS 0
+  if tonumber(string.sub(partial, 8, 8)) == 0 then
+    loadState('base')
+  end
   -- console.log('TABLE:')
   -- console.log(tbl['Up'])
   return tbl
