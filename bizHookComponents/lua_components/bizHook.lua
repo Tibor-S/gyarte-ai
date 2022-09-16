@@ -29,6 +29,14 @@ local socket = require('socket')
 
 --- FUNCTIONS
 
+local function status()
+
+  if marioY == -34 then
+    return false
+  end
+  return true
+end
+
 local function connectSocket()
   tcp = assert(socket.tcp())
   tcp:settimeout(0.01)
@@ -43,6 +51,15 @@ end
 
 local function sendBitmap(tbl)
   local s = ''
+  local sx = string.lpad(tostring(marioX), 7, '0')
+  local sy = string.lpad(tostring(marioY), 7, '0')
+  s = s .. sx .. sy
+  if status() then
+    s = s .. '1'
+  else
+    s = s .. '0'
+  end
+
   for i = 1, #tbl do
     s = s .. tostring(tbl[i])
   end
