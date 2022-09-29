@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network>
-  <weights>
-  </weights>
+  <layer>
+    <treshhold>0</treshhold>
+    <weights inputs="3", outputs="4">
+      <element></element>
+    </weights>
+  </layer>
 </network>
