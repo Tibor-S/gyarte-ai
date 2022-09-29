@@ -29,7 +29,6 @@ class BizNetwork(pittsNetwork):
         self.species = 0
         self.timeoutCheck = time()
         self.comparePos = (0, 0)
-        # self.learningRate = learningRate
 
     def action(self):
         self.con.awaitConnection()
@@ -56,15 +55,7 @@ class BizNetwork(pittsNetwork):
 
         output += str(status)
         print(output)
-        # Send Actions
-        # if status == 1:
         self.con.send(output.encode('utf-8'))
-        # else:
-        #     if floor(time()) % 10 == 0:
-        #         b = '0000100'.encode('utf-8')
-        #     else:
-        #         b = '0000000'.encode('utf-8')
-        #     self.con.send(b)  # skickar endast A
         return status
 
 
@@ -108,6 +99,6 @@ if __name__ == '__main__':
                 np.matrix(np.random.rand(169, 169))-0.5,
                 np.matrix(np.random.rand(7, 169))-0.5
             ],  # 7 x 169
-        )for _ in range(50)]
+        ) for _ in range(50)]
         gen = Generation(networks, populationMult=1)
         gen.testGen()
