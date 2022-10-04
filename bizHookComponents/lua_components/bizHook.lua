@@ -7,6 +7,7 @@ local Inputs = InputSize + 1
 local RootPath = "../"
 local currentState = 'base'
 
+
 --- BIZHAWK FUNCTIONS
 
 local memory = memory
@@ -45,7 +46,8 @@ local function status()
 end
 
 local function loadState(name)
-  savestate.load(RootPath .. "/savestates/" .. name .. ".State")
+  -- savestate.load(RootPath .. "/savestates/" .. name .. ".State")
+  savestate.loadslot(9)
 end
 
 local function connectSocket()

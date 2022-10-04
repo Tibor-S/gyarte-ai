@@ -3,8 +3,6 @@ Server:
 
 Emulator (BizHawk):
 - Öppna smw
-- Välj första banan
+- Sätt en save state i slot 9 för startpunkten
 - Gå till Tools -> Lua Console -> Open Script
 - Öppna bizHook.lua i bizHookComponents\lua_components
-
-- För att byta bana: byt ut bizHookComponents\savestates\base.State med en ny save state

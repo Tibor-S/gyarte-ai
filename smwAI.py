@@ -1,3 +1,4 @@
+import sys
 from BizNetwork import BizNetwork
 from SaveManager import SaveManager
 import numpy as np
@@ -35,19 +36,21 @@ class Generation:
 
 if __name__ == '__main__':
     print('loading networks')
-    savedNets = SaveManager().parseNetworks()
+    networks = SaveManager().parseNetworks()
     print('loaded')
-    while True:
-        networks = [BizNetwork(
-            0.1,
-            [
-                [1 for _ in range(169)],
-                [1 for _ in range(7)],
-            ],  # 7
-            [
-                np.matrix(np.random.rand(169, 169))-0.5,
-                np.matrix(np.random.rand(7, 169))-0.5
-            ],  # 7 x 169
-        ) for _ in range(50)]
-        gen = Generation(savedNets, populationMult=10)
-        gen.testGen()
+    # networks = [BizNetwork(
+    #     0.1,
+    #     [
+    #         [1 for _ in range(7)],
+    #     ],  # 7
+    #     [
+    #         np.matrix(np.random.rand(7, 169))-0.5
+    #     ],  # 7 x 169
+    # ) for _ in range(50)]
+    # networks = [BizNetwork(
+    #     0.1,
+    #     [[1 for _ in range(7)]],
+    #     [np.matrix(np.zeros((7, 13 ** 2)))]
+    # ) for _ in range(10)]
+    gen = Generation(networks, populationMult=10)
+    gen.testGen()
