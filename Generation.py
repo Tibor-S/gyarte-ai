@@ -34,6 +34,6 @@ class Generation:
             species.bizDisconnect()
             print('Next Species')
         self.species.sort(key=fitness, reverse=True)
-        self.generation = self.generation[:self.populationMult]
+        self.species = self.species[:self.populationMult]
 
         return self
