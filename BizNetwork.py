@@ -1,3 +1,4 @@
+from random import random
 from time import time
 import numpy as np
 from ai import pittsNetwork
@@ -13,26 +14,52 @@ def format(n: int):
 
 
 class BizNetwork(pittsNetwork):
-
     def __init__(
         self,
         learningRate: float,
         thresholds: list[list[float]],
         weights: list[np.matrix],
         host='localhost',
-        port=9999
+        port=9999,
+        fitnessQuota=100,
+        timeQuota=10
     ):
         super().__init__(learningRate, thresholds, weights)
         self.con = Connect(host, port)
-        self.species = 0
         self.timeoutCheck = time()
-        self.comparePos = (0, 0)
+        self.compareFitness = 0
+        self.currentFitness = 0
+        self.fitnessQuota = fitnessQuota
+        self.timeQuota = timeQuota
 
     def bizConnect(self):
         self.con.connect()
 
     def bizDisconnect(self):
         self.con.disconnect()
+
+    def fitness(self, xPos: int, yPos: int):
+        return np.sqrt(xPos ** 2 + yPos ** 2)
+
+    def acceptableFitness(self):
+        return np.abs(self.currentFitness - self.compareFitness) >= self.fitnessQuota
+
+    def mutate(self):
+        for lay in self.layers:
+            ww, wh = lay.weights.shape
+            dWeights = np.matrix(
+                (np.random.rand(ww, wh) * 2 - 1) * self.learningRate)
+            dThresholds = [(random() * 2 - 1) * self.learningRate
+                           for _ in lay.thresholds]
+
+            lay.weights = np.matrix(np.add(
+                lay.weights,
+                dWeights))
+            lay.thresholds = list(np.add(
+                lay.thresholds,
+                dThresholds))
+
+            return self
 
     def action(self):
         self.con.awaitConnection()
@@ -51,13 +78,14 @@ class BizNetwork(pittsNetwork):
         )
 
         # CHECK IF STUCK
-        if self.comparePos != (xpos, ypos):
-            self.comparePos = (xpos, ypos)
+        self.currentFitness = self.fitness(xpos, ypos)
+        if self.acceptableFitness():
+            self.compareFitness = self.currentFitness
             self.timeoutCheck = time()
-        elif time() - self.timeoutCheck >= 5:
+        elif time() - self.timeoutCheck >= self.timeQuota:
             status = 0
 
         output += str(status)
-        print(output)
+        # print(output)
         self.con.send(output.encode('utf-8'))
         return status

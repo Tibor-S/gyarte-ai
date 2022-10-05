@@ -64,8 +64,8 @@ end
 
 local function sendBitmap(tbl)
   local s = ''
-  local sx = string.lpad(tostring(marioX), 7, '0')
-  local sy = string.lpad(tostring(marioY), 7, '0')
+  local sx = string.rpad(tostring(marioX), 7, '0')
+  local sy = string.rpad(tostring(marioY), 7, '0')
   s = s .. sx .. sy
   if status() then
     s = s .. '1'
@@ -224,6 +224,11 @@ end
 string.lpad = function(str, len, char)
   if char == nil then char = ' ' end
   return str .. string.rep(char, len - #str)
+end
+
+string.rpad = function(str, len, char)
+  if char == nil then char = ' ' end
+  return string.rep(char, len - #str) .. str
 end
 
 console.log(InputSize - 1)
