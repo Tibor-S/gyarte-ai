@@ -25,7 +25,8 @@ class BizNetwork(pittsNetwork):
         timeQuota=10
     ):
         super().__init__(learningRate, thresholds, weights)
-        self.con = Connect(host, port)
+        self.host = host
+        self.port = port
         self.timeoutCheck = time()
         self.compareFitness = 0
         self.currentFitness = 0
@@ -33,10 +34,14 @@ class BizNetwork(pittsNetwork):
         self.timeQuota = timeQuota
 
     def bizConnect(self):
+        self.con = Connect(self.host, self.port)
         self.con.connect()
+        return self
 
     def bizDisconnect(self):
         self.con.disconnect()
+        self.con = None
+        return self
 
     def fitness(self, xPos: int, yPos: int):
         return np.sqrt(xPos ** 2 + yPos ** 2)
