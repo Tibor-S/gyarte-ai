@@ -11,11 +11,12 @@ Emulator (BizHawk):
 
 git:
 
-> git checkout -b ny-branch>
+> git checkout -b ny-branch
 
-- Skriv kod
-  > git add .>
-  > git commit -m "text">
-  > git checkout master>
-  > git merge ny-branch>
-  > git push>
+> Skriv kod
+
+> git add .
+> git commit -m "text"
+> git checkout master
+> git merge ny-branch
+> git push
