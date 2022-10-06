@@ -23,4 +23,4 @@ git:
 
 > git merge ny-branch
 
-> git push<
+> git push
