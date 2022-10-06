@@ -64,8 +64,8 @@ end
 
 local function sendBitmap(tbl)
   local s = ''
-  local sx = string.rpad(tostring(marioX), 7, '0')
-  local sy = string.rpad(tostring(marioY), 7, '0')
+  local sx = string.rpad(tostring(math.abs(marioX)), 7, '0')
+  local sy = string.rpad(tostring(math.abs(marioY)), 7, '0')
   s = s .. sx .. sy
   if status() then
     s = s .. '1'

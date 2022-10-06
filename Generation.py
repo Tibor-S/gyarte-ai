@@ -24,17 +24,18 @@ class Generation:
 
     def testGen(self):
         def fitness(bn: BizNetwork):
-            return bn.currentFitness
+            return bn.topFitness
+        print('Testing Gen')
 
         for species in self.species:
             alive = 1
             species.bizConnect()
             while alive == 1:
                 alive = species.action()
-            print('Final fitness', species.currentFitness)
+            print('Final fitness', species.topFitness)
             species.bizDisconnect()
             print('Next Species')
         self.species.sort(key=fitness, reverse=True)
-        self.species = self.species[:self.populationMult]
+        self.species = self.species[:1]  # [:self.populationMult]
 
         return self

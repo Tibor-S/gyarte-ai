@@ -30,12 +30,14 @@ class BizNetwork(pittsNetwork):
         self.timeoutCheck = time()
         self.compareFitness = 0
         self.currentFitness = 0
+        self.topFitness = 0
         self.fitnessQuota = fitnessQuota
         self.timeQuota = timeQuota
 
     def reset(self):
         self.compareFitness = 0
         self.currentFitness = 0
+        self.topFitness = 0
         self.timeoutCheck = time()
         return self
 
@@ -96,6 +98,9 @@ class BizNetwork(pittsNetwork):
         elif time() - self.timeoutCheck >= self.timeQuota:
             print('stuck', time() - self.timeoutCheck)
             status = 0
+
+        if self.currentFitness > self.topFitness:
+            self.topFitness = self.currentFitness
 
         output += str(status)
         # print(output)
