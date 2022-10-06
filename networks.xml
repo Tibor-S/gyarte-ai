@@ -2,7 +2,7 @@
 <body>
 	
 
-	<network rate="0.1">
+	<network rate="1.0">
 		<layer>
 			<thresholds>
 				<threshold value="1.0"/>

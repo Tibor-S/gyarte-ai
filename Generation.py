@@ -17,8 +17,9 @@ class Generation:
     def mutate(self):
         base = self.species.copy()
         for network in base:
+            network.reset()
             for _ in range(self.populationMult - 1):
-                self.species.append(deepcopy(network).mutate())
+                self.species.append(deepcopy(network).mutate().reset())
         return self
 
     def testGen(self):

@@ -9,7 +9,7 @@ if __name__ == '__main__':
     print('loading networks')
     networks = SaveManager().parseNetworks()
     print('loaded')
-    gen = Generation(networks, populationMult=10)
+    gen = Generation(networks, populationMult=5)
     while True:
         try:
             gen.mutate()

@@ -33,6 +33,12 @@ class BizNetwork(pittsNetwork):
         self.fitnessQuota = fitnessQuota
         self.timeQuota = timeQuota
 
+    def reset(self):
+        self.compareFitness = 0
+        self.currentFitness = 0
+        self.timeoutCheck = time()
+        return self
+
     def bizConnect(self):
         self.con = Connect(self.host, self.port)
         self.con.connect()
@@ -88,6 +94,7 @@ class BizNetwork(pittsNetwork):
             self.compareFitness = self.currentFitness
             self.timeoutCheck = time()
         elif time() - self.timeoutCheck >= self.timeQuota:
+            print('stuck', time() - self.timeoutCheck)
             status = 0
 
         output += str(status)
