@@ -1,6 +1,6 @@
 Server:
 
-> py smwAI.py>
+> py smwAI.py
 
 Emulator (BizHawk):
 
@@ -15,8 +15,12 @@ git:
 
 > Skriv kod
 
-> git add . \n
-> git commit -m "text" \n
-> git checkout master \n
-> git merge ny-branch \n
-> git push
+> git add .
+
+> git commit -m "text"
+
+> git checkout master
+
+> git merge ny-branch
+
+> git push<
