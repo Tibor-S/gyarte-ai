@@ -4,9 +4,10 @@ from BizNetwork import BizNetwork
 
 
 class SaveManager:
-    relPath = 'networks.xml'
 
-    def __init__(self):
+    def __init__(self, relPath='networks.xml', outPath='networks.xml'):
+        self.relPath = relPath
+        self.outPath = outPath
         self.doc: Document = parse(
             self.relPath)
         print(self.doc.nodeName)
@@ -49,13 +50,13 @@ class SaveManager:
             xmlBody.appendChild(xmlNet)
         print(xmlBody.childNodes)
         self.doc.appendChild(xmlBody)
-        f = open(self.relPath, "w")
+        f = open(self.outPath, "w")
         f.write(self.doc.toprettyxml())
         f.close()
 
     def parseNetworks(self):
         xmlNetworks = self.doc.getElementsByTagName("network")
-        retNetworks = []
+        retNetworks: list[BizNetwork] = []
         for net in xmlNetworks:
             learnRate = float(net.getAttribute('rate'))
             xmlLayers: list[Element] = net.getElementsByTagName('layer')

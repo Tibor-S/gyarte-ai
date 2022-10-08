@@ -14,12 +14,13 @@ class Generation:
         self.populationMult = populationMult
         self.species: list[BizNetwork] = base.copy()
 
-    def mutate(self):
+    def mutate(self, ignoreThreshold=False):
         base = self.species.copy()
         for network in base:
             network.reset()
             for _ in range(self.populationMult - 1):
-                self.species.append(deepcopy(network).mutate().reset())
+                self.species.append(deepcopy(network).mutate(
+                    ignoreThreshold=ignoreThreshold).reset())
         return self
 
     def testGen(self):
@@ -35,6 +36,7 @@ class Generation:
             print('Final fitness', species.topFitness)
             species.bizDisconnect()
             print('Next Species')
+        self.species.reverse()
         self.species.sort(key=fitness, reverse=True)
         self.species = self.species[:1]  # [:self.populationMult]
 

@@ -57,7 +57,7 @@ class BizNetwork(pittsNetwork):
     def acceptableFitness(self):
         return np.abs(self.currentFitness - self.compareFitness) >= self.fitnessQuota
 
-    def mutate(self):
+    def mutate(self, ignoreThreshold=False):
         for lay in self.layers:
             ww, wh = lay.weights.shape
             dWeights = np.matrix(
@@ -68,11 +68,12 @@ class BizNetwork(pittsNetwork):
             lay.weights = np.matrix(np.add(
                 lay.weights,
                 dWeights))
-            lay.thresholds = list(np.add(
-                lay.thresholds,
-                dThresholds))
+            if not ignoreThreshold:
+                lay.thresholds = list(np.add(
+                    lay.thresholds,
+                    dThresholds))
 
-            return self
+        return self
 
     def action(self):
         self.con.awaitConnection()
