@@ -7,11 +7,8 @@ import numpy as np
 
 if __name__ == '__main__':
     print('loading networks')
-    networks = SaveManager(relPath='output.xml').parseNetworks()
+    networks = SaveManager(relPath='two-layer-all-zeros.xml').parseNetworks()
     networks[0].learningRate = 0.1
-    for lay in networks[0].layers:
-        for i in range(len(lay.thresholds)):
-            lay.thresholds[i] = 0.5
     print('loaded')
     gen = Generation(networks, populationMult=10)
     while True:

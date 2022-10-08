@@ -22,7 +22,7 @@ class BizNetwork(pittsNetwork):
         host='localhost',
         port=9999,
         fitnessQuota=100,
-        timeQuota=10
+        timeQuota=5
     ):
         super().__init__(learningRate, thresholds, weights)
         self.host = host
@@ -79,17 +79,22 @@ class BizNetwork(pittsNetwork):
         self.con.awaitConnection()
 
         # RECEIVE AND FORMAT
-        bs = self.con.recv().decode('utf-8')
-        xpos = int(bs[0:7])
-        ypos = int(bs[7:14])
-        status = int(bs[14])
-        bitmap = np.reshape(
-            [format(int(b)) for b in bs[15:]], (len(bs) - 15, 1)
-        )
-        out = self.interact(bitmap).T
-        output = ''.join(
-            [str(format(int(o))) for o in np.array(out)[0]]
-        )
+        while True:
+            try:
+                bs = self.con.recv().decode('utf-8')
+                xpos = int(bs[0:7])
+                ypos = int(bs[7:14])
+                status = int(bs[14])
+                bitmap = np.reshape(
+                    [format(int(b)) for b in bs[15:]], (len(bs) - 15, 1)
+                )
+                out = self.interact(bitmap).T
+                output = ''.join(
+                    [str(format(int(o))) for o in np.array(out)[0]]
+                )
+                break
+            except Exception as e:
+                print(e)
 
         # CHECK IF STUCK
         self.currentFitness = self.fitness(xpos, ypos)

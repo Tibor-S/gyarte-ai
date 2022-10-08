@@ -1,4 +1,5 @@
 from copy import deepcopy
+from traceback import print_tb
 from BizNetwork import BizNetwork
 
 
@@ -15,12 +16,18 @@ class Generation:
         self.species: list[BizNetwork] = base.copy()
 
     def mutate(self, ignoreThreshold=False):
+        print('\n')
+        print('--MUTATING--')
         base = self.species.copy()
+        print(' -BASING NEW GEN ON %d SPECIES' % len(base))
+        print(' -FITNESS:')
         for network in base:
+            print('  - %d' % network.topFitness)
             network.reset()
             for _ in range(self.populationMult - 1):
                 self.species.append(deepcopy(network).mutate(
                     ignoreThreshold=ignoreThreshold).reset())
+        print(' -NEW GENERATION HAS %d SPECIES' % len(self.species))
         return self
 
     def testGen(self):
