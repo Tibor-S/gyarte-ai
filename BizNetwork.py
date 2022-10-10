@@ -1,8 +1,9 @@
 from random import random
 from time import time
 import numpy as np
-from ai import pittsNetwork
+from StochasticNetwork import StochasticNetwork
 from connect import Connect
+from ActivationFunction import SgnLogistic, SoftArgMax
 
 
 def format(n: int):
@@ -13,7 +14,7 @@ def format(n: int):
     return n
 
 
-class BizNetwork(pittsNetwork):
+class BizNetwork(StochasticNetwork):
     def __init__(
         self,
         learningRate: float,
@@ -24,7 +25,15 @@ class BizNetwork(pittsNetwork):
         fitnessQuota=100,
         timeQuota=10
     ):
-        super().__init__(learningRate, thresholds, weights)
+        super().__init__(
+            learningRate,
+            thresholds,
+            weights,
+            [
+                SgnLogistic,
+                SoftArgMax
+            ]
+        )
         self.host = host
         self.port = port
         self.timeoutCheck = time()
@@ -57,22 +66,25 @@ class BizNetwork(pittsNetwork):
     def acceptableFitness(self):
         return np.abs(self.currentFitness - self.compareFitness) >= self.fitnessQuota
 
-    def mutate(self):
-        for lay in self.layers:
-            ww, wh = lay.weights.shape
+    def mutate(self, ignoreThresholds=True):
+
+        for weights in self.weights:
+            ww, wh = weights.shape
             dWeights = np.matrix(
                 (np.random.rand(ww, wh) * 2 - 1) * self.learningRate)
-            dThresholds = [(random() * 2 - 1) * self.learningRate
-                           for _ in lay.thresholds]
-
-            lay.weights = np.matrix(np.add(
-                lay.weights,
+            weights = np.matrix(np.add(
+                weights,
                 dWeights))
-            lay.thresholds = list(np.add(
-                lay.thresholds,
-                dThresholds))
+        if not ignoreThresholds:
+            for thresholds in self.thresholds:
+                dThresholds = [(random() * 2 - 1) * self.learningRate
+                               for _ in thresholds]
 
-            return self
+                thresholds = list(np.add(
+                    thresholds,
+                    dThresholds))
+
+        return self
 
     def action(self):
         self.con.awaitConnection()
@@ -85,7 +97,7 @@ class BizNetwork(pittsNetwork):
         bitmap = np.reshape(
             [format(int(b)) for b in bs[15:]], (len(bs) - 15, 1)
         )
-        out = self.interact(bitmap).T
+        out = self.forwardProp(bitmap).T
         output = ''.join(
             [str(format(int(o))) for o in np.array(out)[0]]
         )
