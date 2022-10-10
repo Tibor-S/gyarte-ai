@@ -1,8 +1,5 @@
-import sys
-from BizNetwork import BizNetwork
 from Generation import Generation
 from SaveManager import SaveManager
-import numpy as np
 
 
 if __name__ == '__main__':
