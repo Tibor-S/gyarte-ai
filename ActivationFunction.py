@@ -47,7 +47,7 @@ class Logistic(ActivationFunction):
 class SgnLogistic(ActivationFunction):
 
     def func(x: np.matrix):
-        return np.matrix(np.div(
+        return np.matrix(np.divide(
             np.subtract(1, np.power(np.e, - x)),
             np.add(1, np.power(np.e, - x))))  # 2 * l(x) - 1 => -1 < l(x) < 1
 

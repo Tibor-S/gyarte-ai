@@ -1,4 +1,5 @@
 from copy import deepcopy
+import random
 from BizNetwork import BizNetwork
 
 
@@ -9,13 +10,16 @@ class Generation:
         base: list[BizNetwork],
         generation=1,
         populationMult=10,
+        survivors=5
     ):
         self.generation = generation
         self.populationMult = populationMult
         self.species: list[BizNetwork] = base.copy()
+        self.survivors = survivors
 
     def mutate(self):
         base = self.species.copy()
+        random.shuffle(base)
         for network in base:
             network.reset()
             for _ in range(self.populationMult - 1):
@@ -35,7 +39,13 @@ class Generation:
             print('Final fitness', species.topFitness)
             species.bizDisconnect()
             print('Next Species')
+        print('--SPECIES')
+        for spec in self.species:
+            print(f' --{spec.topFitness}')
         self.species.sort(key=fitness, reverse=True)
-        self.species = self.species[:1]  # [:self.populationMult]
+        print('--SURVIVORS')
+        for surv in self.species:
+            print(f' --{surv.topFitness}')
+        self.species = self.species[:self.survivors]  # [:self.populationMult]
 
         return self

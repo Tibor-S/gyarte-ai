@@ -1,3 +1,4 @@
+from math import radians
 from random import random
 from time import time
 import numpy as np
@@ -68,20 +69,20 @@ class BizNetwork(StochasticNetwork):
 
     def mutate(self, ignoreThresholds=True):
 
-        for weights in self.weights:
-            ww, wh = weights.shape
+        for i in range(len(self.weights)):
+            wh, ww = self.weights[i].shape
             dWeights = np.matrix(
-                (np.random.rand(ww, wh) * 2 - 1) * self.learningRate)
-            weights = np.matrix(np.add(
-                weights,
+                (np.random.rand(wh, ww) * 2 - 1) * self.learningRate)
+            self.weights[i] = np.matrix(np.add(
+                self.weights[i],
                 dWeights))
         if not ignoreThresholds:
-            for thresholds in self.thresholds:
+            for i in range(len(self.thresholds)):
                 dThresholds = [(random() * 2 - 1) * self.learningRate
-                               for _ in thresholds]
+                               for _ in self.thresholds[i]]
 
-                thresholds = list(np.add(
-                    thresholds,
+                self.thresholds[i] = list(np.add(
+                    self.thresholds[i],
                     dThresholds))
 
         return self
@@ -97,11 +98,11 @@ class BizNetwork(StochasticNetwork):
         bitmap = np.reshape(
             [format(int(b)) for b in bs[15:]], (len(bs) - 15, 1)
         )
-        out = self.forwardProp(bitmap).T
+        self.forwardProp(bitmap)
+        out = self.values[-1].T
         output = ''.join(
-            [str(format(int(o))) for o in np.array(out)[0]]
+            [str(format(round(o))) for o in np.array(out)[0]]
         )
-
         # CHECK IF STUCK
         self.currentFitness = self.fitness(xpos, ypos)
         if self.acceptableFitness():
